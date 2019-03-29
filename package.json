@@ -1,0 +1,19 @@
+{
+  "name": "myautomationscripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "child-process-promise": "^2.2.1",
+    "dotenv": "^7.0.0",
+    "inquirer": "^6.2.2",
+    "lodash": "^4.17.11",
+    "opn": "^6.0.0"
+  }
+}
