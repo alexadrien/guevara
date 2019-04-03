@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({path:__dirname+'/.env'});
 const inquirer = require('inquirer');
 const axios = require('axios');
 const child_process = require('child-process-promise');
