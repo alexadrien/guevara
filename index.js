@@ -1,4 +1,4 @@
-require('dotenv').config({path:__dirname+'/.env'});
+require('dotenv').config({ path: __dirname + '/.env' });
 const inquirer = require('inquirer');
 const axios = require('axios');
 const child_process = require('child-process-promise');
@@ -156,6 +156,19 @@ const openPullRequestInNewTab = async pullRequest => {
   await openInNewTab(pullRequest.web_url);
 };
 
+const getOpenMergeRequests = async () => {
+  const pullRequest = (await axios.get(
+    `${myGitlabAPIProjectUrl}/merge_requests?state=opened`,
+    {
+      headers:
+        {
+          'Private-Token': myGitlabApiToken
+        }
+    }
+  ));
+  return pullRequest.data;
+};
+
 const _ = async () => {
   let tickets = null;
   let ticket = null;
@@ -174,6 +187,10 @@ const _ = async () => {
       await pushProjectToGitlab();
       const pullRequest = await createPullRequest(ticket);
       await openPullRequestInNewTab(pullRequest);
+      break;
+    case 'mr':
+      const mergeRequests = await getOpenMergeRequests();
+      await openPullRequestInNewTab(lodash.first(mergeRequests));
       break;
   }
 };
