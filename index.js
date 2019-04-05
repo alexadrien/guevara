@@ -169,6 +169,19 @@ const getOpenMergeRequests = async () => {
   return pullRequest.data;
 };
 
+const askUserToConfirmReadingCommits = async () => {
+  const question = {
+    type: 'list',
+    name: 'ticket',
+    message: 'Have you read your code to prevent PR feedback?',
+    choices: [
+      { name: "Oui" },
+      { name: "Non" },
+    ],
+  };
+  await inquirer.prompt([question]);
+};
+
 const _ = async () => {
   let tickets = null;
   let ticket = null;
@@ -185,6 +198,7 @@ const _ = async () => {
       tickets = findUserDoingTickets(tickets);
       ticket = await askUserToConfirmDoingTicket(tickets);
       await pushProjectToGitlab();
+      await askUserToConfirmReadingCommits();
       const pullRequest = await createPullRequest(ticket);
       await openPullRequestInNewTab(pullRequest);
       break;
