@@ -178,7 +178,7 @@ const _ = async () => {
       ticket = await askUserToChooseTicket(tickets);
       await prepareProjectForTheNewFeature(ticket);
       await moveTicketToDoing(ticket);
-      await openTicketInTrello(ticket);
+      // await openTicketInTrello(ticket);
       break;
     case 'pr':
       tickets = await getDoingTickets();
