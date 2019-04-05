@@ -197,8 +197,10 @@ const _ = async () => {
       tickets = await getDoingTickets();
       tickets = findUserDoingTickets(tickets);
       ticket = await askUserToConfirmDoingTicket(tickets);
-      await pushProjectToGitlab();
-      await askUserToConfirmReadingCommits();
+      await Promise.all([
+        pushProjectToGitlab(),
+        askUserToConfirmReadingCommits(),
+      ]);
       const pullRequest = await createPullRequest(ticket);
       await openPullRequestInNewTab(pullRequest);
       break;
