@@ -202,6 +202,7 @@ const _ = async () => {
         askUserToConfirmReadingCommits(),
       ]);
       const pullRequest = await createPullRequest(ticket);
+
       await openPullRequestInNewTab(pullRequest);
       break;
     case 'mr':
