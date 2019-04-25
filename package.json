@@ -1,14 +1,17 @@
 {
-  "name": "myautomationscripts",
+  "name": "devandpr",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automation commands for Gitlab and Trello",
   "main": "index.js",
   "scripts": {
     "test": "node index.js pipe",
     "mr": "node index.js mr"
   },
-  "author": "",
+  "author": "Alex-Adrien Auger",
   "license": "ISC",
+  "bin": {
+    "devandpr": "./index.js"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "child-process-promise": "^2.2.1",
