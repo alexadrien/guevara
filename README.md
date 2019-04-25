@@ -21,3 +21,9 @@ project_path=~/sipios/gmi-portal
 gitlab_api_project_url=https://gitlab.example.com/api/v4/projects/259
 gitlab_api_token=xxxxxxxxxxxxxxxxxx
 ```
+
+## Todo 
+[] Change .env in a more particular filename
+[] Avoid having the path variable 
+[] Tag the person on the ticket if it is not done
+[] Display daily backlog column first
