@@ -28,7 +28,8 @@ trello_member_id=xxxxxxxxxxxxxxxxxxxxxxxx
 project_path=~/sipios/gmi-portal
 gitlab_api_project_url=https://gitlab.EXAMPLE_DOMAIN.com/api/v4/projects/259
 gitlab_api_token=xxxxxxxxxxxxxxxxxx
-```
+github_access_token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+github_api_project_url=https://api.github.com/repos/HOLDER/REPO```
 
 ## Todo 
 [] Github compatibility

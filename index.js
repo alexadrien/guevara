@@ -17,6 +17,7 @@ const myProjectPath = process.env.project_path;
 const myGitlabAPIProjectUrl = process.env.gitlab_api_project_url;
 const myGitlabApiToken = process.env.gitlab_api_token;
 const myGithubAccessToken = process.env.github_access_token;
+const myGithubAPIProjectUrl = process.env.github_api_project_url;
 const myGitlabMainBranch = 'master';
 
 
@@ -134,7 +135,7 @@ const getPullRequest = async id => {
   return pullRequest;
 };
 
-const createPullRequest = async ticket => {
+const createPullRequestOnGitlab = async ticket => {
   const payload = {
     source_branch: await getProjectActiveBranch(),
     target_branch: myGitlabMainBranch,
@@ -152,6 +153,29 @@ const createPullRequest = async ticket => {
     }
   ).catch(async err => await getPullRequest(err.response.data.message[0].split('!')[1]));
   return pullRequest.data;
+};
+
+const createPullRequestOnGithub = async ticket => {
+  const payload = {
+    title: ticket.name,
+    body: getPullRequestTemplate(ticket),
+    head: (await getProjectActiveBranch()),
+    base: "master"
+  };
+
+  const pullRequest = await axios.post(
+    `${myGithubAPIProjectUrl}/pulls?access_token=${myGithubAccessToken}`,
+    payload,
+  ).catch(async err => await getPullRequest(err.response.data.message[0].split('!')[1]));
+  return pullRequest.data;
+};
+
+const createPullRequest = async ticket => {
+  if (!!myGithubAPIProjectUrl) {
+    return await createPullRequestOnGithub();
+  } else if (!!myGitlabAPIProjectUrl) {
+    return await createPullRequestOnGitlab();
+  }
 };
 
 const openPullRequestInNewTab = async pullRequest => {
@@ -193,7 +217,6 @@ const _ = async () => {
       ticket = await askUserToChooseTicket(tickets);
       await prepareProjectForTheNewFeature(ticket);
       await moveTicketToDoing(ticket);
-      // await openTicketInTrello(ticket);
       break;
     case 'pr':
       tickets = await getDoingTickets();
