@@ -9,7 +9,8 @@ alias pr='/usr/local/bin/node ~/projets/myautomationscripts/index.js pr'
 ### Get token
 
 https://trello.com/app-key
-https://gitlab.example.com/profile/personal_access_tokens
+https://gitlab.EXAMPLE_DOMAIN.com/profile/personal_access_tokens
+https://github.com/settings/tokens
 
 
 ### .env
@@ -25,7 +26,7 @@ trello_daily_column=xxxxxxxxxxxxxxxxxxxxxxxx
 trello_doing_column=xxxxxxxxxxxxxxxxxxxxxxxx
 trello_member_id=xxxxxxxxxxxxxxxxxxxxxxxx
 project_path=~/sipios/gmi-portal
-gitlab_api_project_url=https://gitlab.example.com/api/v4/projects/259
+gitlab_api_project_url=https://gitlab.EXAMPLE_DOMAIN.com/api/v4/projects/259
 gitlab_api_token=xxxxxxxxxxxxxxxxxx
 ```
 

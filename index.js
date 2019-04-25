@@ -16,6 +16,7 @@ const myTrelloMemberId = process.env.trello_member_id;
 const myProjectPath = process.env.project_path;
 const myGitlabAPIProjectUrl = process.env.gitlab_api_project_url;
 const myGitlabApiToken = process.env.gitlab_api_token;
+const myGithubAccessToken = process.env.github_access_token;
 const myGitlabMainBranch = 'master';
 
 
@@ -205,10 +206,6 @@ const _ = async () => {
       const pullRequest = await createPullRequest(ticket);
 
       await openPullRequestInNewTab(pullRequest);
-      break;
-    case 'mr':
-      const mergeRequests = await getOpenMergeRequests();
-      await openPullRequestInNewTab(lodash.first(mergeRequests));
       break;
   }
 };
