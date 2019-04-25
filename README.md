@@ -9,6 +9,7 @@
 
 Example of the .env to create
 
+```
 trello_api_key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 trello_api_secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 trello_board_id=xxxxxxxxx
@@ -19,3 +20,4 @@ trello_member_id=xxxxxxxxxxxxxxxxxxxxxxxx
 project_path=~/sipios/gmi-portal
 gitlab_api_project_url=https://gitlab.example.com/api/v4/projects/259
 gitlab_api_token=xxxxxxxxxxxxxxxxxx
+```
