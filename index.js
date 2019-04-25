@@ -179,7 +179,11 @@ const createPullRequest = async ticket => {
 };
 
 const openPullRequestInNewTab = async pullRequest => {
-  await openInNewTab(pullRequest.web_url);
+  if (!!myGithubAPIProjectUrl) {
+    await openInNewTab(pullRequest.html_url);
+  } else if (!!myGitlabAPIProjectUrl) {
+    await openInNewTab(pullRequest.web_url);
+  }
 };
 
 const getOpenMergeRequests = async () => {
