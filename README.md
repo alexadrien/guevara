@@ -1,8 +1,15 @@
 ### Alias
 
-`alias dev='/usr/local/bin/node ~/projets/myautomationscripts/index.js dev'`
+```
+alias dev='/usr/local/bin/node ~/projets/myautomationscripts/index.js dev'
+alias pr='/usr/local/bin/node ~/projets/myautomationscripts/index.js pr'
+```
 
-`alias pr='/usr/local/bin/node ~/projets/myautomationscripts/index.js pr'`
+
+### Get token
+
+https://trello.com/app-key
+https://gitlab.example.com/profile/personal_access_tokens
 
 
 ### .env
