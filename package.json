@@ -1,0 +1,20 @@
+{
+  "name": "guevara",
+  "version": "1.0.3",
+  "description": "Automation commands for Gitlab and Trello",
+  "main": "entry_point.js",
+  "scripts": {},
+  "author": "Alex-Adrien Auger",
+  "license": "ISC",
+  "bin": {
+    "guevara": "entry_point.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "child-process-promise": "^2.2.1",
+    "dotenv": "^7.0.0",
+    "inquirer": "^6.2.2",
+    "lodash": "^4.17.11",
+    "opn": "^6.0.0"
+  }
+}

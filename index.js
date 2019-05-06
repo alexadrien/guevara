@@ -1,9 +1,11 @@
-require('dotenv').config();
+#!/usr/bin/env node
+require('dotenv').config({ path: __dirname + '/.guevara' });
 const inquirer = require('inquirer');
 const axios = require('axios');
 const child_process = require('child-process-promise');
 const lodash = require('lodash');
 const opn = require('opn');
+const url = require('url');
 
 const myTrelloApiKey = process.env.trello_api_key;
 const myTrelloApiSecret = process.env.trello_api_secret;
@@ -12,10 +14,17 @@ const myTrelloSprintColumn = process.env.trello_sprint_backlog_column;
 const myTrelloDailyColumn = process.env.trello_daily_column;
 const myTrelloDoingColumn = process.env.trello_doing_column;
 const myTrelloMemberId = process.env.trello_member_id;
-const myProjectPath = process.env.project_path;
 const myGitlabAPIProjectUrl = process.env.gitlab_api_project_url;
 const myGitlabApiToken = process.env.gitlab_api_token;
+const myGithubAccessToken = process.env.github_access_token;
+const myGithubAPIProjectUrl = process.env.github_api_project_url;
 const myGitlabMainBranch = 'master';
+
+
+const COMPATIBLE_PLATFORM = {
+  GITHUB: "Github",
+  GITLAB: "Gitlab",
+};
 
 
 const ticketIsInBacklog = ticket => {
@@ -59,7 +68,7 @@ const askUserToChooseTicket = async backlogTickets => {
 
 const prepareProjectForTheNewFeature = async ticket => {
   const branchToCreate = `feature${ticket.url.replace(ticket.shortUrl, '')}`;
-  const result = await child_process.exec(`cd ${myProjectPath} && git stash && git checkout -B ${branchToCreate}`);
+  const result = await child_process.exec(`git stash && git checkout -B ${branchToCreate}`);
 };
 
 const moveTicketToDoing = async ticket => {
@@ -68,10 +77,6 @@ const moveTicketToDoing = async ticket => {
 
 const openInNewTab = async url => {
   await opn(url, { wait: false });
-};
-
-const openTicketInTrello = async ticket => {
-  await openInNewTab(ticket.url);
 };
 
 const getDoingTickets = async () => {
@@ -111,11 +116,11 @@ const getPullRequestTemplate = ticket => {
 };
 
 const pushProjectToGitlab = async () => {
-  const result = await child_process.exec(`cd ${myProjectPath} && git push --set-upstream origin ${await getProjectActiveBranch()}`);
+  const result = await child_process.exec(`git push --set-upstream origin ${await getProjectActiveBranch()}`);
 };
 
 const getProjectActiveBranch = async () => {
-  const activeBranchCommand = await child_process.exec(`cd ${myProjectPath} && git rev-parse --abbrev-ref HEAD`);
+  const activeBranchCommand = await child_process.exec(`git rev-parse --abbrev-ref HEAD`);
   return activeBranchCommand.stdout.replace(/\n/g, "");
 };
 
@@ -132,7 +137,7 @@ const getPullRequest = async id => {
   return pullRequest;
 };
 
-const createPullRequest = async ticket => {
+const createPullRequestOnGitlab = async ticket => {
   const payload = {
     source_branch: await getProjectActiveBranch(),
     target_branch: myGitlabMainBranch,
@@ -152,30 +157,154 @@ const createPullRequest = async ticket => {
   return pullRequest.data;
 };
 
-const openPullRequestInNewTab = async pullRequest => {
-  await openInNewTab(pullRequest.web_url);
+const createPullRequestOnGithub = async ticket => {
+  const payload = {
+    title: ticket.name,
+    body: getPullRequestTemplate(ticket),
+    head: (await getProjectActiveBranch()),
+    base: "master"
+  };
+
+  const pullRequest = await axios.post(
+    `${myGithubAPIProjectUrl}/pulls?access_token=${myGithubAccessToken}`,
+    payload,
+  ).catch(async err => await getPullRequest(err.response.data.message[0].split('!')[1]));
+  return pullRequest.data;
 };
 
-const _ = async () => {
-  let tickets = null;
-  let ticket = null;
-  switch (process.argv[2]) {
-    case 'dev':
-      tickets = await getBacklogTickets();
-      ticket = await askUserToChooseTicket(tickets);
-      await prepareProjectForTheNewFeature(ticket);
-      await moveTicketToDoing(ticket);
-      await openTicketInTrello(ticket);
-      break;
-    case 'pr':
-      tickets = await getDoingTickets();
-      tickets = findUserDoingTickets(tickets);
-      ticket = await askUserToConfirmDoingTicket(tickets);
-      await pushProjectToGitlab();
-      const pullRequest = await createPullRequest(ticket);
-      await openPullRequestInNewTab(pullRequest);
-      break;
+const createPullRequest = async ticket => {
+  if (!!myGithubAPIProjectUrl) {
+    return await createPullRequestOnGithub();
+  } else if (!!myGitlabAPIProjectUrl) {
+    return await createPullRequestOnGitlab();
   }
 };
 
-_();
+const openPullRequestInNewTab = async pullRequest => {
+  if (!!myGithubAPIProjectUrl) {
+    await openInNewTab(pullRequest.html_url);
+  } else if (!!myGitlabAPIProjectUrl) {
+    await openInNewTab(pullRequest.web_url);
+  }
+};
+
+const askUserToConfirmReadingCommits = async () => {
+  const question = {
+    type: 'list',
+    name: 'ticket',
+    message: 'Have you read your code to prevent PR feedback?',
+    choices: [
+      { name: "Yes" },
+      { name: "No" },
+    ],
+  };
+  await inquirer.prompt([question]);
+};
+
+const askUserForTrelloToken = async () => {
+  const question = {
+    type: 'input',
+    name: 'trelloToken',
+    message: `
+Please enter your trello developer token
+You can find on here here : 
+
+https://trello.com/app-key
+
+`,
+  };
+  return await inquirer.prompt([question]);
+};
+
+const askUserForTrelloSecret = async token => {
+  const question = {
+    type: 'input',
+    name: 'trelloSecret',
+    message: `
+Please enter your trello developer secret
+You can find on here here :
+https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=${token}
+`,
+  };
+  return await inquirer.prompt([question]);
+};
+
+const askUserForHisPlatform = async () => {
+  const question = {
+    type: 'list',
+    name: 'platform',
+    message: `What platform do you use ?
+
+`,
+    choices: [
+      { name: COMPATIBLE_PLATFORM.GITLAB },
+      { name: COMPATIBLE_PLATFORM.GITHUB },
+    ],
+  };
+  return await inquirer.prompt([question]);
+};
+
+const askUserForHisGithubToken = async () => {
+  const question = {
+    type: 'input',
+    name: 'githubToken',
+    message: `
+Please enter your Github token
+You can create one here here :
+
+https://github.com/settings/tokens/new
+`,
+  };
+  return await inquirer.prompt([question]);
+};
+
+const askUserForHisGitlabProjectUrl = async () => {
+  const question = {
+    type: 'input',
+    name: 'gitlabUrl',
+    message: `
+Please enter your Gitlab project URL
+`,
+  };
+  return await inquirer.prompt([question]);
+};
+
+const findProjectLabel = projectUrl => {
+  const path = url.parse(projectUrl).pathname;
+  return path.replace('/', '');
+};
+
+const askUserToCreateAToken = async projectUrl => {
+  const path = url.parse(projectUrl);
+  const customUserUrl = `${path.protocol}//${path.hostname}/profile/personal_access_tokens`;
+  const question = {
+    type: 'input',
+    name: 'gitlabToken',
+    message: `
+Please enter your Gitlab token
+You can create one here here :
+
+${customUserUrl}
+
+`,
+  };
+  return await inquirer.prompt([question]);
+};
+
+const getGitlabAPIUrl = async (projectUrl, token) => {
+  const parsedUrl = url.parse(projectUrl);
+  const projectLabel = findProjectLabel(projectUrl);
+  const projectTitle = projectLabel.split('/')[1];
+  return axios.get(
+    `${parsedUrl.protocol}//${parsedUrl.hostname}/api/v4/search?scope=projects&search=${projectTitle}`,
+    {
+      headers: {
+        "PRIVATE-TOKEN": token
+      }
+    }
+  )
+    .then(res => res.data.filter(item => item.path_with_namespace === projectLabel))
+    .then(project => project && project[0].id)
+    .then(id => `${parsedUrl.protocol}//${parsedUrl.hostname}/api/v4/projects/${id}`);
+};
+
