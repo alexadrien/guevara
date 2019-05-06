@@ -6,6 +6,10 @@ const { getGithubAPIProjectUrl } = require("./user_data");
 const { getMainBranch } = require("./user_data");
 const { getPullRequestTemplate } = require("./pull_request");
 const url = require('url');
+const { findProjectTitle } = require("./url_utils");
+const { findProjectLabel } = require("./url_utils");
+const { USER_DATA_KEYS } = require("./user_data");
+const { getEnvValue } = require("./user_data");
 
 const getPullRequest = (async id => {
   const pullRequest = (await axios.get(
@@ -20,15 +24,16 @@ const getPullRequest = (async id => {
   return pullRequest;
 });
 
-const getGitlabAPIUrl = (async (projectUrl, token) => {
+const getGitlabAPIUrl = (async (projectUrl) => {
   const parsedUrl = url.parse(projectUrl);
+  const gitlabToken = await getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);
   const projectLabel = findProjectLabel(projectUrl);
   const projectTitle = findProjectTitle(projectUrl);
   return axios.get(
     `${parsedUrl.protocol}//${parsedUrl.hostname}/api/v4/search?scope=projects&search=${projectTitle}`,
     {
       headers: {
-        "PRIVATE-TOKEN": token
+        "PRIVATE-TOKEN": gitlabToken
       }
     }
   )

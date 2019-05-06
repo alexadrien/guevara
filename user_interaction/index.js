@@ -2,6 +2,10 @@ const inquirer = require('inquirer');
 const COMPATIBLE_PLATFORM = require('../platforms.js');
 const url = require('url');
 const MESSAGES = require("./messages");
+const { getAllBoardColumns } = require("../trello");
+const { getAllUserBoards } = require("../trello");
+const { USER_DATA_KEYS } = require("../user_data");
+const { getEnvValue } = require("../user_data");
 
 const askValueQuestion = async content => (
   await inquirer.prompt(
@@ -14,7 +18,6 @@ const askValueQuestion = async content => (
     ]
   )
 ).answer;
-
 
 
 const askUserToChooseTicket = (async backlogTickets => {
@@ -35,7 +38,36 @@ const askUserForTrelloToken = (async () => {
   return askValueQuestion(MESSAGES.TRELLO_TOKEN);
 });
 
-const askUserForTrelloSecret = (async token => {
+const askUserforHisBoard = (async () => {
+  const allUserBoards = await getAllUserBoards();
+  const question = {
+    type: 'list',
+    name: 'board',
+    pageSize: 10,
+    message: `What board do you want to use ?
+
+`,
+    choices: allUserBoards,
+  };
+  return (await inquirer.prompt([question])).board;
+});
+
+const askUserforTheColumn = (async (questionWording) => {
+  const allBoardLists = await getAllBoardColumns();
+  const question = {
+    type: 'list',
+    name: 'board',
+    pageSize: 10,
+    message: `${questionWording}
+
+`,
+    choices: allBoardLists,
+  };
+  return (await inquirer.prompt([question])).board;
+});
+
+const askUserForTrelloSecret = (async () => {
+  const token = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY)
   return askValueQuestion(MESSAGES.TRELLO_SECRET(token));
 });
 
@@ -64,6 +96,10 @@ const askUserForHisGitlabProjectUrl = (async () => {
 
 const askUserForHisGithubProjectUrl = (async () => {
   return askValueQuestion(MESSAGES.GITHUB_PROJECT_URL);
+});
+
+const askUserforHisMainBranch = (async () => {
+  return askValueQuestion(MESSAGES.MAIN_BRANCH);
 });
 
 const askUserToCreateAGitlabToken = (async projectUrl => {
@@ -102,7 +138,10 @@ module.exports = {
   askUserForTrelloToken,
   askUserForTrelloSecret,
   askUserForHisPlatform,
+  askUserforHisMainBranch,
   askUserForHisGithubToken,
+  askUserforTheColumn,
+  askUserforHisBoard,
   askUserForHisGitlabProjectUrl,
   askUserToCreateAGitlabToken,
   askUserToConfirmDoingTicket,

@@ -1,3 +1,5 @@
+const url = require('url');
+
 const MESSAGES = {
   TRELLO_TOKEN: `
 Please enter your trello developer token
@@ -31,6 +33,13 @@ Please enter your github project URL
 
 Example :
 https://github.com/alexadrien/guevara
+
+`,
+  MAIN_BRANCH: `
+Please enter project's main git branch
+
+Example :
+master | develop | any_branch_you_like
 
 `,
   GITLAB_TOKEN: (projectUrl) => {

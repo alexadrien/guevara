@@ -5,4 +5,4 @@ link:
 	npm link
 
 init:
-	rm -f .guevara && guevara init
+	guevara init
