@@ -40,35 +40,35 @@ module.exports = (async () => {
     async () => (await askUserForTrelloToken() || await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY)),
   );
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET))) {
-    const trelloSecret = await askUserForTrelloSecret() || await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET);
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET, trelloSecret);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_API_SECRET,
+    async () => (await askUserForTrelloSecret() || await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET)),
+  );
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_BOARD_ID))) {
-    const boardId = await askUserforHisBoard();
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_BOARD_ID, boardId);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_BOARD_ID,
+    async () => (await askUserforHisBoard()),
+  );
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_SPRINT_COLUMN))) {
-    const sprintBacklogColumnId = await askUserforTheColumn("Please select the Sprint Backlog column ?");
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_SPRINT_COLUMN, sprintBacklogColumnId);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_SPRINT_COLUMN,
+    async () => (await askUserforTheColumn("Please select the Sprint Backlog column ?")),
+  );
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_DAILY_COLUMN))) {
-    const dailyBacklogColumnId = await askUserforTheColumn("Please select the Daily Backlog column ?");
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_DAILY_COLUMN, dailyBacklogColumnId);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_DAILY_COLUMN,
+    async () => (await askUserforTheColumn("Please select the Daily Backlog column ?")),
+  );
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_DOING_COLUMN))) {
-    const doingColumnId = await askUserforTheColumn("Please select the Doing column ?");
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_DOING_COLUMN, doingColumnId);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_DOING_COLUMN,
+    async () => (await askUserforTheColumn("Please select the Doing column ?")),
+  );
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID))) {
-    const userMemberId = await getUserMemberId();
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID, userMemberId);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_MEMBER_ID,
+    async () => (await getUserMemberId()),
+  );
 
   let platform = null;
   const userHasGitlab = !!await getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);

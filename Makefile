@@ -6,3 +6,9 @@ link:
 
 init:
 	guevara init
+
+dev:
+	guevara dev
+
+pr:
+	guevara pr
