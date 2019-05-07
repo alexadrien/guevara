@@ -8,6 +8,7 @@ init:
 	guevara init
 
 dev:
+	git checkout master
 	make save
 	guevara dev
 
