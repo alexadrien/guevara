@@ -2,7 +2,11 @@ const child_process = require('child-process-promise');
 
 const prepareProjectForTheNewFeature = async ticket => {
   const branchToCreate = `feature${ticket.url.replace(ticket.shortUrl, '')}`;
-  const result = await child_process.exec(`git stash && git checkout -B ${branchToCreate}`);
+  const command = `git stash && git checkout -B ${branchToCreate}`;
+  console.log(`
+  Running : ${command}
+  `);
+  const result = await child_process.exec(command);
 };
 
 const getProjectActiveBranch = async () => {
