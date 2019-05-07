@@ -8,6 +8,7 @@ init:
 	guevara init
 
 dev:
+	make save
 	guevara dev
 
 pr:
