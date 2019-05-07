@@ -14,3 +14,6 @@ dev:
 
 pr:
 	guevara pr
+
+publish:
+	npm publish
