@@ -23,15 +23,22 @@ const {
 } = require("../user_data");
 const { getGitlabAPIUrl } = require("../gitlab");
 
+const getValueIfNotExisting = async (valueKey, functionToGetValue) => {
+  if (!(await getEnvValue(valueKey))) {
+    const value = await functionToGetValue();
+    await writeEnvValue(valueKey, value);
+  }
+};
+
 module.exports = (async () => {
   if (!await isEnvFileCreated()) {
     await writeEnvFile(initialFileContent);
   }
 
-  if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY))) {
-    const trelloToken = await askUserForTrelloToken() || await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
-    await writeEnvValue(USER_DATA_KEYS.TRELLO_API_KEY, trelloToken);
-  }
+  await getValueIfNotExisting(
+    USER_DATA_KEYS.TRELLO_API_KEY,
+    async () => (await askUserForTrelloToken() || await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY)),
+  );
 
   if (!(await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET))) {
     const trelloSecret = await askUserForTrelloSecret() || await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET);
