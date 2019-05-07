@@ -1,3 +1,4 @@
+const { tagMemberToTicket } = require("../trello");
 const { moveTicketToDoing } = require("../trello");
 const { prepareProjectForTheNewFeature } = require("../project");
 const { askUserToChooseTicket } = require("../user_interaction");
@@ -8,4 +9,5 @@ module.exports = (async () => {
   const ticket = await askUserToChooseTicket(tickets);
   await prepareProjectForTheNewFeature(ticket);
   await moveTicketToDoing(ticket);
+  await tagMemberToTicket(ticket);
 });

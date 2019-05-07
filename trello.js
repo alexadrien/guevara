@@ -72,7 +72,17 @@ const getBacklogTickets = (async () => {
 });
 
 const moveTicketToDoing = (async ticket => {
-  await axios.put(`https://api.trello.com/1/cards/${ticket.id}?idList=${getTrelloBoardId()}&key=${getTrelloApiKey()}&token=${getTrelloApiSecret()}`);
+  const doingColumnId = await getEnvValue(USER_DATA_KEYS.TRELLO_DOING_COLUMN);
+  const trelloKey = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
+  const trelloSecret = await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET);
+  await axios.put(`https://api.trello.com/1/cards/${ticket.id}?idList=${doingColumnId}&key=${trelloKey}&token=${trelloSecret}`);
+});
+
+const tagMemberToTicket = (async ticket => {
+  const memberId = await getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID);
+  const trelloKey = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
+  const trelloSecret = await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET);
+    await axios.put(`https://api.trello.com/1/cards/${ticket.id}?idMembers=${memberId}&key=${trelloKey}&token=${trelloSecret}`);
 });
 
 const getDoingTickets = (async () => {
@@ -87,6 +97,7 @@ module.exports = {
   ticketIsInBacklog,
   getAllUserBoards,
   getAllBoardColumns,
+  tagMemberToTicket,
   ticketIsInDoing,
   ticketMemberIsMe,
   getBacklogTickets,
