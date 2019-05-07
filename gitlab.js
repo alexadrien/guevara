@@ -45,7 +45,7 @@ const getGitlabAPIUrl = (async (projectUrl) => {
 });
 
 const pushProject = (async () => {
-  const result = await child_process.exec(`git push --set-upstream origin ${await getProjectActiveBranch()}`);
+  await child_process.exec(`git push --set-upstream origin ${await getProjectActiveBranch()}`);
 });
 
 const createPullRequestOnGitlab = (async ticket => {
