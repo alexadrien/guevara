@@ -52,8 +52,8 @@ const ticketIsInDoing = (ticket => {
   return lodash.indexOf(acceptedColumns, ticket.idList) > -1;
 });
 
-const ticketMemberIsMe = (ticket => {
-  return lodash.indexOf(ticket.idMembers, getMyTrelloMemberId()) > -1;
+const ticketMemberIsMe = memberId => () => (ticket => {
+  return lodash.indexOf(ticket.idMembers, memberId) > -1;
 });
 
 const getBacklogTickets = (async () => {
@@ -86,11 +86,15 @@ const tagMemberToTicket = (async ticket => {
 });
 
 const getDoingTickets = (async () => {
-  const allCards = await axios.get(`https://api.trello.com/1/boards/${getTrelloBoardId()}/cards?key=${getTrelloApiKey()}&token=${getTrelloApiSecret()}`);
-  return allCards.data.filter(ticketIsInDoing);
+  const doingColumnId = getEnvValue(USER_DATA_KEYS.TRELLO_DOING_COLUMN);
+  const trelloKey = getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
+  const trelloSecret = getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET);
+  const allCards = await axios.get(`https://api.trello.com/1/lists/${doingColumnId}/cards?key=${trelloKey}&token=${trelloSecret}`)
+    .then(response => response.data);
+  return allCards;
 });
 
-const findUserDoingTickets = (tickets => tickets.filter(ticketMemberIsMe));
+const findUserDoingTickets = (tickets, memberId) => tickets.filter(ticketMemberIsMe(memberId));
 
 
 module.exports = {

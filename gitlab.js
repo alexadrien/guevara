@@ -42,7 +42,7 @@ const getGitlabAPIUrl = (async (projectUrl) => {
     .then(id => `${parsedUrl.protocol}//${parsedUrl.hostname}/api/v4/projects/${id}`);
 });
 
-const pushProjectToGitlab = (async () => {
+const pushProject = (async () => {
   const result = await child_process.exec(`git push --set-upstream origin ${await getProjectActiveBranch()}`);
 });
 
@@ -69,6 +69,6 @@ const createPullRequestOnGitlab = (async ticket => {
 module.exports = {
   getPullRequest,
   getGitlabAPIUrl,
-  pushProjectToGitlab,
+  pushProjectToGitlab: pushProject,
   createPullRequestOnGitlab,
 };
