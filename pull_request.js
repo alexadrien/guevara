@@ -1,13 +1,12 @@
-const { getGitlabAPIProjectUrl } = require("./user_data");
-const { getGithubAPIProjectUrl } = require("./user_data");
+const { getEnvValue } = require("./user_data");
 const { createPullRequestOnGitlab } = require("./gitlab");
 const { createPullRequestOnGithub } = require("./github");
 
 const createPullRequest = (async ticket => {
-  if (!!getGithubAPIProjectUrl()) {
-    return await createPullRequestOnGithub();
-  } else if (!!getGitlabAPIProjectUrl()) {
-    return await createPullRequestOnGitlab();
+  if (!(await getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN))) {
+    return await createPullRequestOnGitlab(ticket);
+  } else if (!(await getEnvValue(USER_DATA_KEYS.GITHUB_ACCESS_TOKEN))) {
+    return await createPullRequestOnGithub(ticket);
   }
 });
 

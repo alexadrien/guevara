@@ -12,12 +12,14 @@ const { USER_DATA_KEYS } = require("./user_data");
 const { getEnvValue } = require("./user_data");
 
 const getPullRequest = (async id => {
+  const gitlabAPIUrl = getEnvValue(USER_DATA_KEYS.GITLAB_API_PROJECT_URL);
+  const gitlabToken = getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);
   const pullRequest = (await axios.get(
-    `${myGitlabAPIProjectUrl}/merge_requests/${id}`,
+    `${gitlabAPIUrl}/merge_requests/${id}`,
     {
       headers:
         {
-          'Private-Token': myGitlabApiToken
+          'Private-Token': gitlabToken
         }
     }
   ));
@@ -53,13 +55,15 @@ const createPullRequestOnGitlab = (async ticket => {
     title: ticket.name,
     description: getPullRequestTemplate(ticket),
   };
+  const apiUrl = await getEnvValue(USER_DATA_KEYS.GITLAB_API_PROJECT_URL);
+  const gitlabToken = await getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);
   const pullRequest = await axios.post(
-    `${getGithubAPIProjectUrl()}/merge_requests`,
+    `${apiUrl}/merge_requests`,
     payload,
     {
       headers:
         {
-          'Private-Token': getGitlabApiToken()
+          'Private-Token': gitlabToken
         }
     }
   ).catch(async err => await getPullRequest(err.response.data.message[0].split('!')[1]));
