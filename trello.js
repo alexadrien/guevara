@@ -11,13 +11,15 @@ const { getTrelloDoingColumn } = require("./user_data");
 const { getTrelloSprintColumn } = require("./user_data");
 
 
-const ticketIsInBacklog = (ticket => {
+const ticketIsInBacklog = async  ticket => {
+  const sprintColumn = await getEnvValue(USER_DATA_KEYS.TRELLO_SPRINT_COLUMN);
+  const dailyColumn = await getEnvValue(USER_DATA_KEYS.TRELLO_DAILY_COLUMN);
   const acceptedColumns = [
-    getTrelloSprintColumn(),
-    getTrelloDailyColumn(),
+    sprintColumn,
+    dailyColumn,
   ];
   return lodash.indexOf(acceptedColumns, ticket.idList) > -1;
-});
+};
 
 const getAllUserBoards = (async () => {
   const trelloToken = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
@@ -55,8 +57,18 @@ const ticketMemberIsMe = (ticket => {
 });
 
 const getBacklogTickets = (async () => {
-  const allCards = await axios.get(`https://api.trello.com/1/boards/${getTrelloBoardId()}/cards?key=${getTrelloApiKey()}&token=${getTrelloApiSecret()}`);
-  return allCards.data.filter(ticketIsInBacklog);
+  const sprintBacklogId = await getEnvValue(USER_DATA_KEYS.TRELLO_SPRINT_COLUMN);
+  const dailyId = await getEnvValue(USER_DATA_KEYS.TRELLO_DAILY_COLUMN);
+  const trelloApiKey = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
+  const trelloApiSecret = await getEnvValue(USER_DATA_KEYS.TRELLO_API_SECRET);
+  const allSprintBacklogCards = await axios.get(`https://api.trello.com/1/lists/${sprintBacklogId}/cards?key=${trelloApiKey}&token=${trelloApiSecret}`)
+    .then(response => response.data);
+  const allDailyBacklogCards = await axios.get(`https://api.trello.com/1/lists/${dailyId}/cards?key=${trelloApiKey}&token=${trelloApiSecret}`)
+    .then(response => response.data);
+  return [
+    ...allDailyBacklogCards,
+    ...allSprintBacklogCards,
+  ];
 });
 
 const moveTicketToDoing = (async ticket => {

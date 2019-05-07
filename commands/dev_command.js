@@ -7,5 +7,5 @@ module.exports = (async () => {
   const tickets = await getBacklogTickets();
   const ticket = await askUserToChooseTicket(tickets);
   await prepareProjectForTheNewFeature(ticket);
-  await moveTicketToDoing(ticket);
+  // await moveTicketToDoing(ticket);
 });
