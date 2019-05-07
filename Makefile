@@ -9,7 +9,7 @@ init:
 
 dev:
 	git checkout master
-	make save
+	make		 save
 	guevara dev
 
 pr:
