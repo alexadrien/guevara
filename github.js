@@ -1,6 +1,6 @@
 const { getProjectActiveBranch } = require("./project");
-const { getPullRequestTemplate } = require("./pull_request");
 const axios = require('axios');
+const { getPullRequestTemplateDescription } = require("./pull_request");
 const { USER_DATA_KEYS } = require("./user_data");
 const { getEnvValue } = require("./user_data");
 const { findProjectLabel } = require("./url_utils");
@@ -11,7 +11,7 @@ const createPullRequestOnGithub = async ticket => {
   const masterBranch = await getEnvValue(USER_DATA_KEYS.MAIN_BRANCH);
   const payload = {
     title: ticket.name,
-    body: getPullRequestTemplate(ticket),
+    body: getPullRequestTemplateDescription(ticket),
     head: (await getProjectActiveBranch()),
     base: masterBranch
   };
@@ -21,7 +21,7 @@ const createPullRequestOnGithub = async ticket => {
   const pullRequest = await axios.post(
     `${githubApiUrl}/pulls?access_token=${githubToken}`,
     payload,
-  );
+  ).catch(console.log);
   return pullRequest.data;
 };
 

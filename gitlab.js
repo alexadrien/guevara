@@ -1,20 +1,17 @@
 const child_process = require('child-process-promise');
 const { getProjectActiveBranch } = require("./project");
 const axios = require('axios');
-const { getGitlabApiToken } = require("./user_data");
-const { getGithubAPIProjectUrl } = require("./user_data");
-const { getMainBranch } = require("./user_data");
-const { getPullRequestTemplate } = require("./pull_request");
 const url = require('url');
+const { getPullRequestTemplateDescription } = require("./pull_request");
 const { findProjectTitle } = require("./url_utils");
 const { findProjectLabel } = require("./url_utils");
 const { USER_DATA_KEYS } = require("./user_data");
 const { getEnvValue } = require("./user_data");
 
 const getPullRequest = (async id => {
-  const gitlabAPIUrl = getEnvValue(USER_DATA_KEYS.GITLAB_API_PROJECT_URL);
-  const gitlabToken = getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);
-  const pullRequest = (await axios.get(
+  const gitlabAPIUrl = await getEnvValue(USER_DATA_KEYS.GITLAB_API_PROJECT_URL);
+  const gitlabToken = await getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);
+  const pullRequest = await axios.get(
     `${gitlabAPIUrl}/merge_requests/${id}`,
     {
       headers:
@@ -22,7 +19,7 @@ const getPullRequest = (async id => {
           'Private-Token': gitlabToken
         }
     }
-  ));
+  ).catch(console.log);
   return pullRequest;
 });
 
@@ -49,11 +46,12 @@ const pushProject = (async () => {
 });
 
 const createPullRequestOnGitlab = (async ticket => {
+  const mainBranch = await getEnvValue(USER_DATA_KEYS.MAIN_BRANCH);
   const payload = {
     source_branch: await getProjectActiveBranch(),
-    target_branch: getMainBranch(),
+    target_branch: mainBranch,
     title: ticket.name,
-    description: getPullRequestTemplate(ticket),
+    description: getPullRequestTemplateDescription(ticket),
   };
   const apiUrl = await getEnvValue(USER_DATA_KEYS.GITLAB_API_PROJECT_URL);
   const gitlabToken = await getEnvValue(USER_DATA_KEYS.GITLAB_API_TOKEN);
