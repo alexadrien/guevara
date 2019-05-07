@@ -52,7 +52,7 @@ const ticketIsInDoing = (ticket => {
   return lodash.indexOf(acceptedColumns, ticket.idList) > -1;
 });
 
-const ticketMemberIsMe = memberId => () => (ticket => {
+const ticketMemberIsMe = memberId => (ticket => {
   return lodash.indexOf(ticket.idMembers, memberId) > -1;
 });
 
