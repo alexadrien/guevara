@@ -3,7 +3,7 @@ const { USER_DATA_KEYS } = require("../user_data");
 const { getEnvValue } = require("../user_data");
 const { openPullRequestInNewTab } = require("../web_browser");
 const { pushProjectToGitlab } = require("../gitlab");
-const { askUserToConfirmDoingTicket, askUserToConfirmReadingCommits } = require("../user_interaction");
+const { askUserToConfirmDoingTicket } = require("../user_interaction");
 const { getDoingTickets, findUserDoingTickets } = require("../trello");
 
 module.exports = (async () => {
