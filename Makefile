@@ -16,6 +16,5 @@ pr:
 	guevara pr
 
 publish:
-	make save
 	npm version patch
 	npm publish
