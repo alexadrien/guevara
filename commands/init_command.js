@@ -6,6 +6,8 @@ const {
   askUserForHisGithubToken
 } = require("../user_interaction");
 const COMPATIBLE_PLATFORM = require('../platforms');
+const { CHOICES } = require("../user_interaction/choices");
+const { askUserIfHeHasDailyColumn } = require("../user_interaction");
 const { askUserToCreateAGitlabToken } = require("../user_interaction");
 const { askUserforHisMainBranch } = require("../user_interaction");
 const { getUserMemberId } = require("../trello");
@@ -57,7 +59,13 @@ module.exports = (async () => {
 
   await getValueIfNotExisting(
     USER_DATA_KEYS.TRELLO_DAILY_COLUMN,
-    async () => (await askUserforTheColumn("Please select the Daily Backlog column ?")),
+    async () => {
+      const userHasDailyColumn = await askUserIfHeHasDailyColumn();
+      if (userHasDailyColumn) {
+        return await askUserforTheColumn("Please select the Daily Backlog column ?")
+      }
+      return CHOICES.NO;
+    },
   );
 
   await getValueIfNotExisting(

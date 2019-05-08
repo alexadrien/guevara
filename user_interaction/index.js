@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const COMPATIBLE_PLATFORM = require('../platforms.js');
 const url = require('url');
 const MESSAGES = require("./messages");
+const { CHOICES } = require("./choices");
 const { getAllBoardColumns } = require("../trello");
 const { getAllUserBoards } = require("../trello");
 const { USER_DATA_KEYS } = require("../user_data");
@@ -67,7 +68,7 @@ const askUserforTheColumn = (async (questionWording) => {
 });
 
 const askUserForTrelloSecret = (async () => {
-  const token = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY)
+  const token = await getEnvValue(USER_DATA_KEYS.TRELLO_API_KEY);
   return askValueQuestion(MESSAGES.TRELLO_SECRET(token));
 });
 
@@ -133,6 +134,21 @@ const askUserToConfirmReadingCommits = (async () => {
   return (await inquirer.prompt([question])).answer;
 });
 
+
+const askUserIfHeHasDailyColumn = (async () => {
+  const question = {
+    type: 'list',
+    name: 'answer',
+    message: 'Do you have a "Daily Backlog" column',
+    choices: [
+      { name: CHOICES.YES },
+      { name: CHOICES.NO },
+    ],
+  };
+  const response = (await inquirer.prompt([question])).answer;
+  return response === CHOICES.YES;
+});
+
 module.exports = {
   askUserToChooseTicket,
   askUserForTrelloToken,
@@ -147,4 +163,5 @@ module.exports = {
   askUserToConfirmDoingTicket,
   askUserToConfirmReadingCommits,
   askUserForHisGithubProjectUrl,
+  askUserIfHeHasDailyColumn,
 };
