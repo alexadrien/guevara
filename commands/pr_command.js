@@ -11,7 +11,7 @@ module.exports = (async () => {
   const userMemberId = await getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID);
   tickets = findUserDoingTickets(tickets, userMemberId);
   const ticket = await askUserToConfirmDoingTicket(tickets);
-  await pushProjectToGitlab()
+  await pushProjectToGitlab();
   const pullRequest = await createPullRequest(ticket);
   await openPullRequestInNewTab(pullRequest);
 });
