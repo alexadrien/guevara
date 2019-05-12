@@ -1,3 +1,4 @@
+const { sendInitCommand } = require("../analytics");
 const {
   askUserForHisPlatform,
   askUserForTrelloSecret,
@@ -33,6 +34,7 @@ const getValueIfNotExisting = async (valueKey, functionToGetValue) => {
 };
 
 module.exports = (async () => {
+  sendInitCommand();
   if (!await isEnvFileCreated()) {
     await writeEnvFile(initialFileContent);
   }
