@@ -1,3 +1,4 @@
+const { dealWithError } = require("../errors");
 const { sendDevCommand } = require("../analytics");
 const { tagMemberToTicket } = require("../trello");
 const { moveTicketToDoing } = require("../trello");
@@ -14,6 +15,6 @@ module.exports = (async () => {
         await moveTicketToDoing(ticket);
         await tagMemberToTicket(ticket);
     } catch (error) {
-
+        dealWithError(error)
     }
 });
