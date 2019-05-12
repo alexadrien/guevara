@@ -6,10 +6,14 @@ const { askUserToChooseTicket } = require("../user_interaction");
 const { getBacklogTickets } = require("../trello");
 
 module.exports = (async () => {
-  sendDevCommand();
-  const tickets = await getBacklogTickets();
-  const ticket = await askUserToChooseTicket(tickets);
-  await prepareProjectForTheNewFeature(ticket);
-  await moveTicketToDoing(ticket);
-  await tagMemberToTicket(ticket);
+    try {
+        sendDevCommand();
+        const tickets = await getBacklogTickets();
+        const ticket = await askUserToChooseTicket(tickets);
+        await prepareProjectForTheNewFeature(ticket);
+        await moveTicketToDoing(ticket);
+        await tagMemberToTicket(ticket);
+    } catch (error) {
+
+    }
 });
