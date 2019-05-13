@@ -140,6 +140,13 @@ module.exports = (async () => {
             await writeEnvValue(USER_DATA_KEYS.MAIN_BRANCH, mainBranch);
         }
 
+        console.log(`
+A new file is now available in your current folder : 
+    .guevara
+
+Please add that file in your .gitignore
+        `);
+
         console.log("✅ Ready to code ! 💪");
     } catch (error) {
         dealWithError(error);
