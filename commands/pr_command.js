@@ -10,7 +10,8 @@ const { getDoingTickets, findUserDoingTickets } = require("../trello");
 
 module.exports = (async () => {
     try {
-        const trelloMemberId = getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID);
+        const trelloMemberId = await getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID);
+        console.log(trelloMemberId);
         sendPrCommand(trelloMemberId);
         let tickets = await getDoingTickets();
         const userMemberId = await getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID);
