@@ -11,4 +11,8 @@ module.exports = {
     key: 'init',
     file: './commands/init_command',
   },
+  HELP: {
+    key: 'help',
+    file: './commands/help_command',
+  },
 };
