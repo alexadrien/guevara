@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { GuevaraFileNotOkError } = require('./errors');
+const findUp = require('find-up');
 
 const USER_DATA_KEYS = {
     GITHUB_API_PROJECT_URL: 'GithubApiProjectUrl',
@@ -28,7 +29,10 @@ const isEnvFileCreated = (async () => {
     return true;
 });
 
-const getEnvFile = (async () => await fs.readFileSync(ENV_FILE_NAME, { encoding: ENCODING }));
+const getEnvFile = (async () => {
+    const upPath = await findUp(ENV_FILE_NAME);
+    return await fs.readFileSync(upPath, { encoding: ENCODING })
+});
 
 const writeEnvFile = (content => fs.writeFileSync(ENV_FILE_NAME, content, { encoding: ENCODING }));
 
