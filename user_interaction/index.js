@@ -107,6 +107,10 @@ const askUserToCreateAGitlabToken = (async projectUrl => {
   return askValueQuestion(MESSAGES.GITLAB_TOKEN(projectUrl));
 });
 
+const askUserToPressEnterToOpenLink = (async url => {
+  return askValueQuestion(MESSAGES.PRESS_ENTER_TO_OPEN(url));
+});
+
 const askUserToConfirmDoingTicket = (async tickets => {
   const question = {
     type: 'list',
