@@ -28,8 +28,8 @@ If that doesn't fix the problem, please delete .guevara and try guevara init aga
 const dealWithError = (error) => {
     console.log(error.stack);
     console.log(`
-... Something went wrong :/ 
-Sending error to developer.
+  ... Something went wrong :/ 
+  Sending error to developer.
         `);
     sendErrorCommand(error);
 };

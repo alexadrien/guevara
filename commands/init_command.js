@@ -141,13 +141,13 @@ module.exports = (async () => {
         }
 
         console.log(`
-A new file is now available in your current folder : 
-    .guevara
+    A new file is now available in your current folder : 
+        .guevara
+    
+    Please add that file in your .gitignore
 
-Please add that file in your .gitignore
+    ✅ Ready to code ! 💪
         `);
-
-        console.log("✅ Ready to code ! 💪");
     } catch (error) {
         dealWithError(error);
     }
