@@ -4,7 +4,7 @@ const { createPullRequest } = require("../scv");
 const { USER_DATA_KEYS } = require("../user_data");
 const { getEnvValue } = require("../user_data");
 const { openPullRequestInNewTab } = require("../web_browser");
-const { pushProjectToGitlab } = require("../gitlab");
+const { pushProject } = require("../gitlab");
 const { askUserToConfirmDoingTicket } = require("../user_interaction");
 const { getDoingTickets, findUserDoingTickets } = require("../trello");
 const lodash = require('lodash');
@@ -22,7 +22,7 @@ module.exports = (async () => {
         } else {
             ticket = lodash.first(tickets);
         }
-        await pushProjectToGitlab();
+        await pushProject();
         const pullRequest = await createPullRequest(ticket);
         await openPullRequestInNewTab(pullRequest);
     } catch (error) {
