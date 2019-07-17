@@ -27,7 +27,7 @@ const askUserToChooseTicket = (async backlogTickets => {
     name: 'ticket',
     message: 'What ticket are you developing?',
     choices: backlogTickets.map(ticket => ({
-      name: ticket.name,
+      name: `${ticket.idShort} - ${ticket.name}`,
       value: ticket,
     })),
   };
