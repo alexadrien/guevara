@@ -15,6 +15,6 @@ dev:
 pr:
 	guevara pr
 
-publish:
+mep:
 	npm version patch
 	npm publish
