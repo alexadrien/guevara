@@ -17,6 +17,9 @@ module.exports = (async () => {
         const userMemberId = await getEnvValue(USER_DATA_KEYS.TRELLO_MEMBER_ID);
         tickets = findUserDoingTickets(tickets, userMemberId);
         let ticket;
+        if (tickets.length === 0) {
+            console.log(`🧐 No ticket found on your board`);
+        }
         if (tickets.length > 1 ) {
             ticket = await askUserToConfirmDoingTicket(tickets);
         } else {
