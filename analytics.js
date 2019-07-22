@@ -23,10 +23,12 @@ const sendErrorCommand = (error, userId) => sendCommand(ANALYTICS_EVENTS.ERROR, 
     message: error.message,
     stack: error.stack,
 });
+const sendCustomErrorCommand = (payload, userId) => sendCommand(ANALYTICS_EVENTS.ERROR, userId || "-", payload);
 
 module.exports = {
     sendInitCommand,
     sendDevCommand,
     sendPrCommand,
     sendErrorCommand,
+    sendCustomErrorCommand
 };

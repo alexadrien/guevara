@@ -1,5 +1,6 @@
 const { getProjectActiveBranch } = require("./project");
 const axios = require('axios');
+const { sendCustomErrorCommand } = require("./analytics");
 const { getPullRequestTemplateDescription } = require("./pull_request");
 const { USER_DATA_KEYS } = require("./user_data");
 const { getEnvValue } = require("./user_data");
@@ -32,8 +33,10 @@ const createPullRequestOnGithub = async ticket => {
   )
     .then(response => response.data)
     .catch(async response => {
-    if (response.response.data.errors[0].message.indexOf("pull request already exists") > -1) {
+    if (response.response.data.errors[0] && response.response.data.errors[0].message.indexOf("pull request already exists") > -1) {
      return await getPullRequest();
+    } else {
+      sendCustomErrorCommand(response.response.data);
     }
   });
   return pullRequest;
