@@ -33,6 +33,7 @@ const createPullRequestOnGithub = async ticket => {
   )
     .then(response => response.data)
     .catch(async response => {
+      console.log(response.response.data);
       sendCustomErrorCommand(response.response.data);
     if (response.response.data.errors[0] && response.response.data.errors[0].message.indexOf("pull request already exists") > -1) {
      return await getPullRequest();
