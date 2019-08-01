@@ -1,6 +1,6 @@
 {
   "name": "guevara",
-  "version": "1.1.27",
+  "version": "1.1.28",
   "description": "Automation commands for Gitlab and Trello",
   "main": "entry_point.js",
   "scripts": {},
