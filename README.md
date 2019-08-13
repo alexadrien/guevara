@@ -1,6 +1,9 @@
 # Guevara
 
-Guevara is an automation tool developed @ [Sipios](http://sipios.com). Don't hesitate to contribute :)
+Guevara is an work-in-progress 🚧 automation tool. Don't hesitate to contribute :)
+
+## Core Maintainer
+- Alex-Adrien Auger @ [Sipios](http://sipios.com)
 
 ## Installation
 
