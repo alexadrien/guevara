@@ -16,6 +16,7 @@
     "child-process-promise": "^2.2.1",
     "dotenv": "^7.0.0",
     "find-up": "^4.0.0",
+    "https": "^1.0.0",
     "inquirer": "^6.2.2",
     "lodash": "^4.17.11",
     "open": "^7.0.4"
